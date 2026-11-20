@@ -1830,6 +1830,9 @@ class PyEFPEHMSource:
 
     def _native_full_support_phase(self, descriptor, times):
         """Evaluate phase and frequency with one shared interval lookup."""
+        if self.model.params.get("environmental_model") is not None:
+            return None
+
         if descriptor is None or not descriptor[3]:
             return None
         active_indices = descriptor[5]
@@ -1859,6 +1862,9 @@ class PyEFPEHMSource:
     def _native_full_support_phase_derivative(
             self, descriptor, times, derivative):
         """Evaluate one stored native phase derivative on all ODE segments."""
+        if self.model.params.get("environmental_model") is not None:
+            return None
+        
         if (descriptor is None or not descriptor[3]
                 or derivative >= len(self.model.mode_phases_Qs)):
             return None
@@ -2130,10 +2136,15 @@ class PyEFPEHMSource:
             omega, rate, zeros_real))
 
     def _orbital_phases(self, t, derivative):
-        """``(lambda, delta_lambda)`` from the model's own ODE solution."""
+        """Return lambda and delta_lambda, or their time derivatives."""
         query = np.clip(np.asarray(t, dtype=float), self.t_start, self.t_end)
-        first, second = self.model.sol(query.reshape(-1),
-                                       derivative=derivative, idxs=[2, 3])
+        flat = query.reshape(-1)
+
+        first, second = self.model.sol(flat, derivative=derivative, idxs=[2, 3])
+
+        if self.model.params.get("environmental_model") is not None:
+            first = first + self.model._environmental_tdomain_orbital_phase(flat, derivative=derivative)
+
         return first.reshape(query.shape), second.reshape(query.shape)
 
     def carrier_phase(self, harmonic, t):

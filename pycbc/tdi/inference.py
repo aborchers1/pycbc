@@ -932,11 +932,16 @@ def _pyefpehm(**params):
                                    PolarizationRotatedHarmonicSource,
                                    PyEFPEHMSource,
                                    TimeShiftedHarmonicSource)
-    keys = ('mass1', 'mass2', 'spin1x', 'spin1y', 'spin1z',
-            'spin2x', 'spin2y', 'spin2z', 'distance', 'inclination',
-            'eccentricity', 'phase', 'f22_start', 'f22_ref', 'f22_end',
-            'Amplitude_tol', 'Interp_points_per_prec_cycle',
-            'Series_Reversion_Order')
+    keys = (
+        'mass1', 'mass2', 'spin1x', 'spin1y', 'spin1z',
+        'spin2x', 'spin2y', 'spin2z', 'distance', 'inclination',
+        'eccentricity', 'phase', 'f22_start', 'f22_ref', 'f22_end',
+        'Amplitude_tol', 'Interp_points_per_prec_cycle',
+        'Series_Reversion_Order',
+        'environmental_model', 'environmental_redshift',
+        'environmental_phase_sign', 'tertiary_mass', 'tertiary_distance',
+        'gas_density', 'sound_speed',
+    )
     arguments = {key: params[key] for key in keys if key in params}
     arguments.setdefault('f22_start', params.get('f_lower'))
     arguments.setdefault('f22_ref', arguments.get('f22_start'))
