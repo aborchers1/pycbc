@@ -217,6 +217,13 @@ environmental_phase_sign = Parameter("environmental_phase_sign",
                             description=("Overall sign of the environmental Fourier-phase correction. "
                                         "Must be either +1 or -1."))
 
+environmental_fd_method = Parameter("environmental_fd_method",
+                                    dtype=str, default="stationary_phase", label=None,
+                                    description=("pyEFPEHM FD environmental construction: "
+                                                 "'phase_only' adds the Fourier-phase correction at vacuum "
+                                                 "stationary times; 'stationary_phase' uses the corrected "
+                                                 "TD carrier's stationary times and curvature."))
+
 tertiary_mass = Parameter("tertiary_mass",
                 dtype=float, default=0.0, label=r"$m_3~(\mathrm{M}_\odot)$",
                 description=("Source-frame tertiary mass in solar masses, used by the "
@@ -626,7 +633,7 @@ testingGR_params = ParameterList\
 # parameters of environmental effects
 environmental_params = ParameterList\
     ([environmental_model, environmental_redshift, environmental_phase_sign,
-      tertiary_mass, tertiary_distance, gas_density, sound_speed,])
+      environmental_fd_method, tertiary_mass, tertiary_distance, gas_density, sound_speed,])
 
 # intrinsic parameters of a CBC waveform. Some of these are not recognized
 # by every waveform model
